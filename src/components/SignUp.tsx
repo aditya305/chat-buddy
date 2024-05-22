@@ -1,54 +1,30 @@
-import { Colors } from "@/constants/Colors";
-import React, { useState } from "react";
-import { Pressable, SafeAreaView, StyleSheet, View } from "react-native";
-import { Alert, Text, TextInput, Button } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import axios from "axios";
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from "@/app/_layout";
-
-type SignUpScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SignUp'>;
-
-interface SignUpState {
-  name: string;
-  email: string;
-  password: string;
-}
+import React, { useState } from 'react';
+import { Pressable, SafeAreaView, StyleSheet, View, Alert, Text, TextInput } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useAuth } from '../context/AuthProvider';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../navigation/RootLayout';
 
 const SignUp: React.FC = () => {
-  const [name, setName] = useState<SignUpState["name"]>("");
-  const [email, setEmail] = useState<SignUpState["email"]>("");
-  const [password, setPassword] = useState<SignUpState["password"]>("");
+  const [name, setName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  const [showPassword, setShowPassword] = useState(false);
+  const { signUp } = useAuth();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const navigation = useNavigation<SignUpScreenNavigationProp>();
-
-  // Function to toggle the password visibility state
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
   const handleSignUp = async () => {
-    console.log('Button Pressed'); 
     try {
-      const response = await axios.post(
-        "https://chat-buddy-api.onrender.com/api/v1/user/signup",
-        {
-          name,
-          email,
-          password,
-        }
-      );
-      if (response.status === 200) {
-        Alert.alert("Account created successfully");
-        navigation.navigate('Login');
-      } else {
-        Alert.alert("Error", "Something went wrong");
-      }
+      await signUp(name, email, password);
+      Alert.alert('Account created successfully');
+      navigation.navigate('Login');
     } catch (error) {
-      Alert.alert(`${error}`);
+      Alert.alert('Error', 'Something went wrong');
     }
   };
 
@@ -85,7 +61,7 @@ const SignUp: React.FC = () => {
         />
       </View>
       <View style={styles.buttonView}>
-        <Pressable style={styles.button} onPress= {handleSignUp}>
+        <Pressable style={styles.button} onPress={handleSignUp}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </Pressable>
       </View>
@@ -96,7 +72,7 @@ const SignUp: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
     padding: 10,
   },
   icon: {
@@ -104,37 +80,37 @@ const styles = StyleSheet.create({
   },
   inputView: {
     gap: 15,
-    width: "100%",
+    width: '100%',
     paddingHorizontal: 40,
     marginBottom: 5,
   },
   title: {
     fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
+    fontWeight: 'bold',
+    textAlign: 'center',
     marginBottom: 48,
   },
   input: {
     height: 50,
     marginBottom: 12,
     paddingHorizontal: 10,
-    borderColor: "#dfdfdf",
+    borderColor: '#dfdfdf',
     borderWidth: 1,
     borderRadius: 7,
   },
   button: {
-    backgroundColor: "#00134a",
+    backgroundColor: '#00134a',
     height: 45,
     borderRadius: 5,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonText: {
-    color: "white",
+    color: 'white',
     fontSize: 18,
   },
   buttonView: {
-    width: "100%",
+    width: '100%',
     paddingTop: 30,
     paddingHorizontal: 50,
   },

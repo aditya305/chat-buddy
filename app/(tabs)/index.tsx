@@ -2,9 +2,9 @@ import { Image, StyleSheet, Platform } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import SignUp from '@/components/SignUp';
+import SignUp from '@/src/components/SignUp';
 import { Provider as PaperProvider } from 'react-native-paper';
-import ChatScreen from '@/components/Chat';
+import ChatScreen from '@/src/components/Chat';
 
 export default function HomeScreen() {
   return (
